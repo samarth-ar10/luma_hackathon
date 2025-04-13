@@ -1,0 +1,52 @@
+[
+  {
+    "id": 1,
+    "name": "Downtown Office Tower",
+    "status": "In Progress",
+    "start_date": "2024-01-15",
+    "end_date": "2025-06-30",
+    "budget": 25000000.0,
+    "manager_id": 2,
+    "manager_name": "Sarah Johnson"
+  },
+  {
+    "id": 2,
+    "name": "Riverside Apartments",
+    "status": "Planning",
+    "start_date": "2024-05-01",
+    "end_date": "2026-01-15",
+    "budget": 18500000.0,
+    "manager_id": 2,
+    "manager_name": "Sarah Johnson"
+  },
+  {
+    "id": 3,
+    "name": "Central Park Renovation",
+    "status": "In Progress",
+    "start_date": "2024-03-10",
+    "end_date": "2024-09-15",
+    "budget": 4200000.0,
+    "manager_id": 2,
+    "manager_name": "Sarah Johnson"
+  },
+  {
+    "id": 4,
+    "name": "Harbor Bridge Repairs",
+    "status": "Pending Approval",
+    "start_date": "2024-06-15",
+    "end_date": "2024-12-30",
+    "budget": 7500000.0,
+    "manager_id": 2,
+    "manager_name": "Sarah Johnson"
+  },
+  {
+    "id": 5,
+    "name": "School Gymnasium",
+    "status": "Completed",
+    "start_date": "2023-09-01",
+    "end_date": "2024-02-28",
+    "budget": 3800000.0,
+    "manager_id": 2,
+    "manager_name": "Sarah Johnson"
+  }
+]

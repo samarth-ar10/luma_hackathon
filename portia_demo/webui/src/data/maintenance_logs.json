@@ -1,0 +1,110 @@
+[
+    {
+        "id": 1,
+        "equipment_id": 1,
+        "maintenance_date": "2024-04-10",
+        "maintenance_type": "Routine",
+        "description": "Oil change and filter replacement",
+        "performed_by": 12,
+        "cost": 350.00
+    },
+    {
+        "id": 2,
+        "equipment_id": 2,
+        "maintenance_date": "2024-03-05",
+        "maintenance_type": "Routine",
+        "description": "General inspection and lubrication",
+        "performed_by": 5,
+        "cost": 150.00
+    },
+    {
+        "id": 3,
+        "equipment_id": 3,
+        "maintenance_date": "2024-05-02",
+        "maintenance_type": "Repair",
+        "description": "Hydraulic system malfunction repair",
+        "performed_by": 12,
+        "cost": 1200.00
+    },
+    {
+        "id": 4,
+        "equipment_id": 4,
+        "maintenance_date": "2024-02-15",
+        "maintenance_type": "Routine",
+        "description": "Track tension adjustment and lubrication",
+        "performed_by": 5,
+        "cost": 275.00
+    },
+    {
+        "id": 5,
+        "equipment_id": 5,
+        "maintenance_date": "2024-04-01",
+        "maintenance_type": "Routine",
+        "description": "Filter replacement and fuel system check",
+        "performed_by": 12,
+        "cost": 125.00
+    },
+    {
+        "id": 6,
+        "equipment_id": 6,
+        "maintenance_date": "2024-03-20",
+        "maintenance_type": "Routine",
+        "description": "Lift mechanism inspection and lubrication",
+        "performed_by": 14,
+        "cost": 100.00
+    },
+    {
+        "id": 7,
+        "equipment_id": 7,
+        "maintenance_date": "2024-04-15",
+        "maintenance_type": "Routine",
+        "description": "Bit replacement and mechanism cleaning",
+        "performed_by": 14,
+        "cost": 75.00
+    },
+    {
+        "id": 8,
+        "equipment_id": 8,
+        "maintenance_date": "2024-04-10",
+        "maintenance_type": "Calibration",
+        "description": "Precision calibration and software update",
+        "performed_by": 3,
+        "cost": 0.00
+    },
+    {
+        "id": 9,
+        "equipment_id": 9,
+        "maintenance_date": "2024-03-01",
+        "maintenance_type": "Routine",
+        "description": "Fork inspection and hydraulic system check",
+        "performed_by": 5,
+        "cost": 200.00
+    },
+    {
+        "id": 10,
+        "equipment_id": 10,
+        "maintenance_date": "2024-02-28",
+        "maintenance_type": "Repair",
+        "description": "Power supply board replacement",
+        "performed_by": 12,
+        "cost": 450.00
+    },
+    {
+        "id": 11,
+        "equipment_id": 3,
+        "maintenance_date": "2024-05-02",
+        "maintenance_type": "Emergency",
+        "description": "Boom arm hydraulic failure",
+        "performed_by": 12,
+        "cost": 2200.00
+    },
+    {
+        "id": 12,
+        "equipment_id": 10,
+        "maintenance_date": "2024-03-15",
+        "maintenance_type": "Inspection",
+        "description": "Safety inspection failed - electrical issues",
+        "performed_by": 12,
+        "cost": 0.00
+    }
+]

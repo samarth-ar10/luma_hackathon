@@ -1,0 +1,86 @@
+[
+  {
+    "id": 1,
+    "project_id": 1,
+    "name": "Foundation Inspection",
+    "description": "Verify foundation meets specifications",
+    "status": "Completed",
+    "priority": "High",
+    "assigned_to": 3,
+    "due_date": "2024-02-15",
+    "project_name": "Downtown Office Tower",
+    "assignee_name": "Mike Chen"
+  },
+  {
+    "id": 2,
+    "project_id": 1,
+    "name": "Steel Framework Installation",
+    "description": "Install main steel framework for floors 1-10",
+    "status": "In Progress",
+    "priority": "High",
+    "assigned_to": 5,
+    "due_date": "2024-05-30",
+    "project_name": "Downtown Office Tower",
+    "assignee_name": "David Brown"
+  },
+  {
+    "id": 3,
+    "project_id": 1,
+    "name": "Electrical Wiring - Phase 1",
+    "description": "Complete electrical wiring for floors 1-5",
+    "status": "Pending",
+    "priority": "Medium",
+    "assigned_to": 3,
+    "due_date": "2024-06-15",
+    "project_name": "Downtown Office Tower",
+    "assignee_name": "Mike Chen"
+  },
+  {
+    "id": 4,
+    "project_id": 2,
+    "name": "Site Preparation",
+    "description": "Clear and prepare construction site",
+    "status": "Pending",
+    "priority": "High",
+    "assigned_to": 5,
+    "due_date": "2024-05-15",
+    "project_name": "Riverside Apartments",
+    "assignee_name": "David Brown"
+  },
+  {
+    "id": 5,
+    "project_id": 3,
+    "name": "Landscaping",
+    "description": "Plant trees and install irrigation",
+    "status": "In Progress",
+    "priority": "Medium",
+    "assigned_to": 3,
+    "due_date": "2024-05-30",
+    "project_name": "Central Park Renovation",
+    "assignee_name": "Mike Chen"
+  },
+  {
+    "id": 6,
+    "project_id": 1,
+    "name": "Glass Facade Installation",
+    "description": "Install exterior glass panels on floors 1-5",
+    "status": "Pending",
+    "priority": "High",
+    "assigned_to": 5,
+    "due_date": "2024-07-30",
+    "project_name": "Downtown Office Tower",
+    "assignee_name": "David Brown"
+  },
+  {
+    "id": 7,
+    "project_id": 3,
+    "name": "Playground Equipment",
+    "description": "Install new playground equipment",
+    "status": "Pending",
+    "priority": "Low",
+    "assigned_to": 5,
+    "due_date": "2024-06-30",
+    "project_name": "Central Park Renovation",
+    "assignee_name": "David Brown"
+  }
+]

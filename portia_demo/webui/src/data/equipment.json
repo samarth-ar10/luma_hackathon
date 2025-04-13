@@ -1,0 +1,122 @@
+[
+    {
+        "id": 1,
+        "name": "Excavator CAT 320",
+        "type": "Heavy Machinery",
+        "status": "Operational",
+        "purchase_date": "2022-03-15",
+        "last_maintenance": "2024-04-10",
+        "next_maintenance": "2024-07-10",
+        "assigned_project": 4,
+        "assigned_to": 5,
+        "daily_cost": 450.00
+    },
+    {
+        "id": 2,
+        "name": "Concrete Mixer XL",
+        "type": "Heavy Machinery",
+        "status": "Operational",
+        "purchase_date": "2023-01-20",
+        "last_maintenance": "2024-03-05",
+        "next_maintenance": "2024-06-05",
+        "assigned_project": 3,
+        "assigned_to": 5,
+        "daily_cost": 200.00
+    },
+    {
+        "id": 3,
+        "name": "Crane RT100",
+        "type": "Heavy Machinery",
+        "status": "Under Maintenance",
+        "purchase_date": "2021-05-10",
+        "last_maintenance": "2024-05-02",
+        "next_maintenance": "2024-05-10",
+        "assigned_project": null,
+        "assigned_to": null,
+        "daily_cost": 750.00
+    },
+    {
+        "id": 4,
+        "name": "Bulldozer D6",
+        "type": "Heavy Machinery",
+        "status": "Operational",
+        "purchase_date": "2022-07-22",
+        "last_maintenance": "2024-02-15",
+        "next_maintenance": "2024-05-15",
+        "assigned_project": 5,
+        "assigned_to": 5,
+        "daily_cost": 375.00
+    },
+    {
+        "id": 5,
+        "name": "Portable Generator 50kW",
+        "type": "Power Equipment",
+        "status": "Operational",
+        "purchase_date": "2023-04-18",
+        "last_maintenance": "2024-04-01",
+        "next_maintenance": "2024-07-01",
+        "assigned_project": 3,
+        "assigned_to": 12,
+        "daily_cost": 125.00
+    },
+    {
+        "id": 6,
+        "name": "Scissor Lift 20ft",
+        "type": "Access Equipment",
+        "status": "Operational",
+        "purchase_date": "2023-10-05",
+        "last_maintenance": "2024-03-20",
+        "next_maintenance": "2024-06-20",
+        "assigned_project": 3,
+        "assigned_to": 14,
+        "daily_cost": 150.00
+    },
+    {
+        "id": 7,
+        "name": "Jackhammer XHD",
+        "type": "Hand Tools",
+        "status": "Operational",
+        "purchase_date": "2023-08-12",
+        "last_maintenance": "2024-04-15",
+        "next_maintenance": "2024-07-15",
+        "assigned_project": 5,
+        "assigned_to": 14,
+        "daily_cost": 75.00
+    },
+    {
+        "id": 8,
+        "name": "Surveying Equipment GPS",
+        "type": "Precision Tools",
+        "status": "Operational",
+        "purchase_date": "2024-01-10",
+        "last_maintenance": "2024-04-10",
+        "next_maintenance": "2024-07-10",
+        "assigned_project": null,
+        "assigned_to": 3,
+        "daily_cost": 100.00
+    },
+    {
+        "id": 9,
+        "name": "Forklift 5-Ton",
+        "type": "Material Handling",
+        "status": "Operational",
+        "purchase_date": "2022-11-30",
+        "last_maintenance": "2024-03-01",
+        "next_maintenance": "2024-06-01",
+        "assigned_project": 4,
+        "assigned_to": 5,
+        "daily_cost": 225.00
+    },
+    {
+        "id": 10,
+        "name": "Welding Machine Industrial",
+        "type": "Specialty Equipment",
+        "status": "Out of Service",
+        "purchase_date": "2022-05-19",
+        "last_maintenance": "2024-02-28",
+        "next_maintenance": "2024-03-15",
+        "assigned_project": null,
+        "assigned_to": null,
+        "daily_cost": 90.00
+    }
+]

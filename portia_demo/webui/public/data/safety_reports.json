@@ -1,0 +1,79 @@
+[
+  {
+    "id": 1,
+    "project_id": 1,
+    "report_date": "2024-02-20",
+    "inspector_id": 4,
+    "incident_count": 0,
+    "description": "All safety protocols properly followed.",
+    "compliance_status": "Compliant",
+    "project_name": "Downtown Office Tower",
+    "inspector_name": "Lisa Wong"
+  },
+  {
+    "id": 2,
+    "project_id": 1,
+    "report_date": "2024-03-15",
+    "inspector_id": 4,
+    "incident_count": 1,
+    "description": "Minor incident: worker failed to wear proper PPE. Issue addressed on site.",
+    "compliance_status": "Warning Issued",
+    "project_name": "Downtown Office Tower",
+    "inspector_name": "Lisa Wong"
+  },
+  {
+    "id": 3,
+    "project_id": 1,
+    "report_date": "2024-04-10",
+    "inspector_id": 4,
+    "incident_count": 0,
+    "description": "Improved safety measure implementation since last inspection.",
+    "compliance_status": "Compliant",
+    "project_name": "Downtown Office Tower",
+    "inspector_name": "Lisa Wong"
+  },
+  {
+    "id": 4,
+    "project_id": 3,
+    "report_date": "2024-04-05",
+    "inspector_id": 4,
+    "incident_count": 0,
+    "description": "All safety requirements met for public park renovation.",
+    "compliance_status": "Compliant",
+    "project_name": "Central Park Renovation",
+    "inspector_name": "Lisa Wong"
+  },
+  {
+    "id": 5,
+    "project_id": 2,
+    "report_date": "2024-05-03",
+    "inspector_id": 4,
+    "incident_count": 2,
+    "description": "Two issues found: inadequate fencing and missing signage. To be fixed by next week.",
+    "compliance_status": "Warning Issued",
+    "project_name": "Riverside Apartments",
+    "inspector_name": "Lisa Wong"
+  },
+  {
+    "id": 8,
+    "project_id": 5,
+    "report_date": "2024-05-05",
+    "inspector_id": 4,
+    "incident_count": 0,
+    "description": "All safety protocols properly followed. No incidents.",
+    "compliance_status": "Compliant",
+    "project_name": "School Gymnasium",
+    "inspector_name": "Lisa Wong"
+  },
+  {
+    "id": 9,
+    "project_id": 3,
+    "report_date": "2024-05-03",
+    "inspector_id": 4,
+    "incident_count": 1,
+    "description": "Minor incident with equipment storage. Corrected on-site.",
+    "compliance_status": "Minor Issues",
+    "project_name": "Central Park Renovation",
+    "inspector_name": "Lisa Wong"
+  }
+]

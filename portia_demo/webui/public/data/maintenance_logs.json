@@ -1,0 +1,72 @@
+[
+    {
+        "id": 1,
+        "equipment_id": 101,
+        "maintenance_date": "2024-03-15",
+        "description": "Regular maintenance and oil change",
+        "technician": "John Smith",
+        "cost": 450,
+        "hours": 3,
+        "status": "Completed"
+    },
+    {
+        "id": 2,
+        "equipment_id": 102,
+        "maintenance_date": "2024-03-18",
+        "description": "Replaced hydraulic hose",
+        "technician": "Maria Rodriguez",
+        "cost": 650,
+        "hours": 2,
+        "status": "Completed"
+    },
+    {
+        "id": 3,
+        "equipment_id": 103,
+        "maintenance_date": "2024-03-22",
+        "description": "Engine inspection and filter replacement",
+        "technician": "David Johnson",
+        "cost": 350,
+        "hours": 1.5,
+        "status": "Completed"
+    },
+    {
+        "id": 4,
+        "equipment_id": 104,
+        "maintenance_date": "2024-03-28",
+        "description": "Scheduled maintenance - 500 hour service",
+        "technician": "John Smith",
+        "cost": 1200,
+        "hours": 6,
+        "status": "Completed"
+    },
+    {
+        "id": 5,
+        "equipment_id": 105,
+        "maintenance_date": "2024-04-02",
+        "description": "Emergency repair - electrical system",
+        "technician": "Sarah Williams",
+        "cost": 950,
+        "hours": 4,
+        "status": "Completed"
+    },
+    {
+        "id": 6,
+        "equipment_id": 101,
+        "maintenance_date": "2024-04-10",
+        "description": "Scheduled maintenance - 1000 hour service",
+        "technician": "Maria Rodriguez",
+        "cost": 1800,
+        "hours": 8,
+        "status": "In Progress"
+    },
+    {
+        "id": 7,
+        "equipment_id": 107,
+        "maintenance_date": "2024-04-15",
+        "description": "Brake system maintenance",
+        "technician": "David Johnson",
+        "cost": 750,
+        "hours": 3,
+        "status": "Scheduled"
+    }
+]

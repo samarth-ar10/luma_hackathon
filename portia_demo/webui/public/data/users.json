@@ -1,0 +1,72 @@
+[
+  {
+    "id": 1,
+    "name": "John Smith",
+    "role": "CEO",
+    "email": "john@constructco.com",
+    "phone": "555-123-4567"
+  },
+  {
+    "id": 2,
+    "name": "Sarah Johnson",
+    "role": "Project Manager",
+    "email": "sarah@constructco.com",
+    "phone": "555-234-5678"
+  },
+  {
+    "id": 3,
+    "name": "Mike Chen",
+    "role": "Engineer",
+    "email": "mike@constructco.com",
+    "phone": "555-345-6789"
+  },
+  {
+    "id": 4,
+    "name": "Lisa Wong",
+    "role": "Safety Manager",
+    "email": "lisa@constructco.com",
+    "phone": "555-456-7890"
+  },
+  {
+    "id": 5,
+    "name": "David Brown",
+    "role": "Foreman",
+    "email": "david@constructco.com",
+    "phone": "555-567-8901"
+  },
+  {
+    "id": 11,
+    "name": "Rachel Turner",
+    "role": "architect",
+    "email": "rachel@constructco.com",
+    "phone": "555-123-0011"
+  },
+  {
+    "id": 12,
+    "name": "Anthony Harris",
+    "role": "electrician",
+    "email": "anthony@constructco.com",
+    "phone": "555-123-0012"
+  },
+  {
+    "id": 13,
+    "name": "Olivia Parker",
+    "role": "procurement",
+    "email": "olivia@constructco.com",
+    "phone": "555-123-0013"
+  },
+  {
+    "id": 14,
+    "name": "Nathan Lewis",
+    "role": "laborer",
+    "email": "nathan@constructco.com",
+    "phone": "555-123-0014"
+  },
+  {
+    "id": 15,
+    "name": "Sophia Garcia",
+    "role": "environmental-specialist",
+    "email": "sophia@constructco.com",
+    "phone": "555-123-0015"
+  }
+]
