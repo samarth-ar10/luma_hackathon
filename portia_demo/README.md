@@ -2,6 +2,10 @@
 
 This project demonstrates a company data flow manager with AI integration using Portia and a React frontend.
 
+## Branch Information
+
+The main code for this project is in the `pivot` branch. The `main` branch contains other versions of the project that will be worked on moving forward.
+
 ## Project Structure
 
 - **`flask_server/`**: Flask server connecting the web UI with LLM functionality
@@ -40,12 +44,18 @@ OPENAI_API_KEY=your-openai-api-key
 SQL_MCP_DB_PATH=portia_demo/sql_data.db
 ```
 
-2. Install Python dependencies:
+2. Create and activate a virtual environment:
+```bash
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+```
+
+3. Install Python dependencies:
 ```bash
 pip install -r requirements.txt
 ```
 
-3. Install React dependencies:
+4. Install React dependencies:
 ```bash
 cd webui
 npm install
@@ -55,20 +65,18 @@ npm install
 
 1. Initialize the database (first time only):
 ```bash
-cd /path/to/portia_demo
 python flask_server/init_db.py
 ```
 
 2. Start the Flask server:
 ```bash
-cd /path/to/portia_demo
 python flask_server/simple_app.py
 ```
 This will start the Flask server on http://localhost:9000
 
 3. In a separate terminal, start the React frontend:
 ```bash
-cd /path/to/portia_demo/webui
+cd webui
 npm start
 ```
 This will launch the React app on http://localhost:3000

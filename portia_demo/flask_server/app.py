@@ -57,7 +57,7 @@ try:
             llm_model_name=LLMModel.GPT_4_O,
         )
         portia = Portia(config=config)
-        logger.info("Portia initialized successfully")
+        logger.info("Portia initialized successfully with GPT-4o (128K context)")
     else:
         logger.warning("Portia initialization failed: missing API keys")
         PORTIA_AVAILABLE = False
@@ -253,4 +253,3 @@ if __name__ == "__main__":
     # Print startup information
     print(f"Starting Flask server on port {args.port}")
     app.run(debug=True, host=args.host, port=args.port)
-

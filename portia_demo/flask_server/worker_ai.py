@@ -359,7 +359,7 @@ Organize dashboard tiles to show daily assignments, task details, and relevant s
             # Make the API call to OpenAI
             try:
                 response = client.chat.completions.create(
-                    model="gpt-4",  # You can adjust this to other models like "gpt-3.5-turbo" for cost reasons
+                    model="gpt-4o",  # Using gpt-4o with 128K token context limit
                     messages=messages,
                     temperature=0.7,
                     max_tokens=2048,
