@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Card, Row, Col, Alert, Button, Spinner, Table, Badge } from 'react-bootstrap';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { useConstructionData, formatDate, formatCurrency, calculateProjectCompletion } from '../data/DataService';
+import { useUserContext } from '../contexts/UserContext';
+import axios from 'axios';
 
 // Tile component with drag-and-drop capability
-function DraggableTile({ id, title, size = 'medium', children, onSizeChange }) {
+function DraggableTile({ id, title, size = 'medium', priority, children, onSizeChange }) {
     const [currentSize, setCurrentSize] = useState(size);
 
     const handleSizeChange = () => {
@@ -33,6 +35,9 @@ function DraggableTile({ id, title, size = 'medium', children, onSizeChange }) {
                 <Card.Header className="d-flex justify-content-between align-items-center">
                     <strong>{title}</strong>
                     <div>
+                        <span className="me-2 text-muted" style={{ fontSize: '0.8rem' }}>
+                            Priority: {priority}
+                        </span>
                         <Button
                             variant="outline-secondary"
                             size="sm"
@@ -48,78 +53,137 @@ function DraggableTile({ id, title, size = 'medium', children, onSizeChange }) {
     );
 }
 
-function Dashboard({ role, financeView = false }) {
+function Dashboard({ role }) {
     const { projects, tasks, materials, safetyReports, users, loading, error } = useConstructionData();
+    const { user } = useUserContext();
     const [tiles, setTiles] = useState([]);
+    const [layoutLoading, setLayoutLoading] = useState(true);
+    const [layoutError, setLayoutError] = useState(null);
+    const [layoutLoaded, setLayoutLoaded] = useState(false);
 
-    useEffect(() => {
-        // Set up role-specific tiles
-        if (projects.length > 0) {
-            setupTiles(role, financeView);
+    const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5003';
+
+    // Memoize loadDashboardLayout to prevent recreation on each render
+    const loadDashboardLayout = useCallback(async (userId, userRole) => {
+        if (!userId || layoutLoaded) return;
+
+        try {
+            setLayoutLoading(true);
+            setLayoutError(null);
+
+            const response = await axios.get(`${API_URL}/api/dashboard/layout`, {
+                params: {
+                    user_id: userId,
+                    role: userRole
+                }
+            });
+
+            if (response.data && response.data.tiles) {
+                setTiles(response.data.tiles);
+            } else {
+                // Fallback to old method if API doesn't return expected format
+                setupTiles(userRole);
+            }
+            setLayoutLoaded(true);
+        } catch (err) {
+            console.error('Error loading dashboard layout:', err);
+            setLayoutError('Failed to load dashboard layout. Using default layout.');
+            // Fallback to local setup
+            setupTiles(userRole);
+            setLayoutLoaded(true);
+        } finally {
+            setLayoutLoading(false);
         }
-    }, [role, financeView, projects]);
+    }, [API_URL, layoutLoaded]);
 
-    const setupTiles = (role, financeView) => {
+    // Memoize saveDashboardLayout to prevent recreation on each render
+    const saveDashboardLayout = useCallback(async (updatedTiles) => {
+        if (!user || !user.id) return;
+
+        try {
+            await axios.post(`${API_URL}/api/dashboard/layout`, {
+                user_id: user.id,
+                role: role,
+                layout: { tiles: updatedTiles }
+            });
+        } catch (err) {
+            console.error('Error saving dashboard layout:', err);
+        }
+    }, [API_URL, user, role]);
+
+    // Only load the dashboard layout once when user and role are available
+    useEffect(() => {
+        if (user && user.id && !layoutLoaded) {
+            loadDashboardLayout(user.id, role);
+        }
+    }, [user, role, loadDashboardLayout, layoutLoaded]);
+
+    // Legacy method for backward compatibility
+    const setupTiles = (userRole) => {
         let roleTiles = [];
 
         // Common tiles for all roles
-        roleTiles.push({ id: 'projects', title: 'Project Overview', size: 'medium' });
+        roleTiles.push({ id: 'projects', title: 'Project Overview', size: 'medium', priority: 10 });
 
         // Role-specific tiles
-        switch (role) {
+        switch (userRole) {
             case 'ceo':
-                roleTiles.push({ id: 'finances', title: 'Financial Overview', size: 'medium' });
-                roleTiles.push({ id: 'safety', title: 'Safety Statistics', size: 'small' });
-                roleTiles.push({ id: 'tasks', title: 'Task Completion', size: 'small' });
-                if (financeView) {
-                    roleTiles = [
-                        { id: 'finances', title: 'Financial Overview', size: 'large' },
-                        { id: 'budgetBreakdown', title: 'Budget Breakdown', size: 'medium' },
-                        { id: 'costForecast', title: 'Cost Forecast', size: 'medium' }
-                    ];
-                }
+                roleTiles.push({ id: 'safety', title: 'Safety Statistics', size: 'small', priority: 5 });
+                roleTiles.push({ id: 'tasks', title: 'Task Completion', size: 'small', priority: 8 });
+                roleTiles.push({ id: 'finances', title: 'Financial Overview', size: 'large', priority: 1 });
                 break;
 
             case 'project-manager':
-                roleTiles.push({ id: 'tasks', title: 'Tasks', size: 'large' });
-                roleTiles.push({ id: 'materials', title: 'Materials Tracking', size: 'medium' });
+                roleTiles.push({ id: 'tasks', title: 'Tasks', size: 'large', priority: 1 });
+                roleTiles.push({ id: 'materials', title: 'Materials Tracking', size: 'medium', priority: 3 });
+                roleTiles.push({ id: 'timeline', title: 'Project Timeline', size: 'medium', priority: 2 });
+                break;
+
+            case 'safety-officer':
+                roleTiles.push({ id: 'safety', title: 'Safety Reports', size: 'large', priority: 1 });
+                roleTiles.push({ id: 'safetyTasks', title: 'Safety Tasks', size: 'medium', priority: 2 });
+                roleTiles.push({ id: 'incidents', title: 'Incident Tracking', size: 'medium', priority: 3 });
+                break;
+
+            case 'equipment-manager':
+                roleTiles.push({ id: 'equipment', title: 'Equipment Status', size: 'large', priority: 1 });
+                roleTiles.push({ id: 'maintenance', title: 'Maintenance Schedule', size: 'medium', priority: 2 });
+                roleTiles.push({ id: 'inventory', title: 'Inventory', size: 'medium', priority: 3 });
                 break;
 
             case 'engineer':
-                roleTiles.push({ id: 'tasks', title: 'Engineering Tasks', size: 'large' });
-                roleTiles.push({ id: 'materials', title: 'Materials Specifications', size: 'medium' });
-                break;
-
-            case 'safety-manager':
-                roleTiles.push({ id: 'safety', title: 'Safety Reports', size: 'large' });
-                roleTiles.push({ id: 'safetyTasks', title: 'Safety Tasks', size: 'medium' });
-                break;
-
-            case 'foreman':
-                roleTiles.push({ id: 'tasks', title: 'Site Tasks', size: 'large' });
-                roleTiles.push({ id: 'materials', title: 'Materials Status', size: 'medium' });
-                roleTiles.push({ id: 'labor', title: 'Labor Allocation', size: 'medium' });
+                roleTiles.push({ id: 'tasks', title: 'Engineering Tasks', size: 'large', priority: 1 });
+                roleTiles.push({ id: 'materials', title: 'Materials Specifications', size: 'medium', priority: 2 });
+                roleTiles.push({ id: 'projects', title: 'Project Details', size: 'medium', priority: 3 });
                 break;
 
             default:
-                roleTiles.push({ id: 'tasks', title: 'Tasks', size: 'medium' });
+                roleTiles.push({ id: 'tasks', title: 'My Tasks', size: 'large', priority: 1 });
+                roleTiles.push({ id: 'safety', title: 'Safety Reminders', size: 'medium', priority: 2 });
+                roleTiles.push({ id: 'materials', title: 'Materials Needed', size: 'medium', priority: 3 });
         }
 
         // Add mail tile for all roles
-        roleTiles.push({ id: 'mail', title: 'Mail', size: 'small' });
+        roleTiles.push({ id: 'mail', title: 'Mail', size: 'small', priority: 15 });
+
+        // Sort tiles by priority
+        roleTiles.sort((a, b) => a.priority - b.priority);
 
         setTiles(roleTiles);
     };
 
     const handleTileSizeChange = (id, newSize) => {
-        setTiles(prevTiles =>
-            prevTiles.map(tile =>
-                tile.id === id ? { ...tile, size: newSize } : tile
-            )
+        const updatedTiles = tiles.map(tile =>
+            tile.id === id ? { ...tile, size: newSize } : tile
         );
+
+        setTiles(updatedTiles);
+
+        // Save layout changes to backend with debounce
+        saveDashboardLayout(updatedTiles);
     };
 
-    if (loading) {
+    if (loading || (layoutLoading && !layoutLoaded)) {
         return (
             <div className="text-center p-5">
                 <Spinner animation="border" variant="primary" />
@@ -132,13 +196,13 @@ function Dashboard({ role, financeView = false }) {
         return <Alert variant="danger">{error}</Alert>;
     }
 
-    const pageTitle = financeView ? 'Financial Dashboard' :
+    const pageTitle =
         role === 'ceo' ? 'Executive Dashboard' :
             role === 'project-manager' ? 'Project Management Dashboard' :
-                role === 'engineer' ? 'Engineering Dashboard' :
-                    role === 'safety-manager' ? 'Safety Dashboard' :
-                        role === 'foreman' ? 'Site Management Dashboard' :
-                            'Dashboard';
+                role === 'safety-officer' ? 'Safety Dashboard' :
+                    role === 'equipment-manager' ? 'Equipment Management Dashboard' :
+                        role === 'engineer' ? 'Engineering Dashboard' :
+                            'Worker Dashboard';
 
     // Render content for different tile types
     const renderTileContent = (tileId) => {
@@ -370,23 +434,30 @@ function Dashboard({ role, financeView = false }) {
 
     return (
         <DndProvider backend={HTML5Backend}>
-        <div className="dashboard">
+            <div className="dashboard">
                 <h1 className="mb-4">{pageTitle}</h1>
 
-            <Row>
+                {layoutError && (
+                    <Alert variant="warning" dismissible>
+                        {layoutError}
+                    </Alert>
+                )}
+
+                <Row>
                     {tiles.map(tile => (
                         <DraggableTile
                             key={tile.id}
                             id={tile.id}
                             title={tile.title}
                             size={tile.size}
+                            priority={tile.priority || 999}
                             onSizeChange={handleTileSizeChange}
                         >
                             {renderTileContent(tile.id)}
                         </DraggableTile>
                     ))}
-                    </Row>
-        </div>
+                </Row>
+            </div>
         </DndProvider>
     );
 }

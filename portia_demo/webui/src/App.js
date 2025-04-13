@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, Navigate, useParams } from 'react-router-dom';
-import { Container, Nav, Navbar, Button } from 'react-bootstrap';
+import { Container, Nav, Navbar, Button, Spinner } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
-import { UserProvider } from './contexts/UserContext';
+import { UserProvider, useUserContext, useWorkerAI } from './contexts/UserContext';
 
 // Pages
 import Dashboard from './pages/Dashboard';
@@ -11,8 +11,6 @@ import ProjectTimeline from './pages/ProjectTimeline';
 import MaterialsTracking from './pages/MaterialsTracking';
 import SafetyReports from './pages/SafetyReports';
 import TaskManager from './pages/TaskManager';
-import AIAssistant from './pages/AIAssistant';
-import EquipmentManager from './pages/EquipmentManager';
 import AIVisualizer from './pages/AIVisualizer';
 
 // Role definitions
@@ -28,23 +26,23 @@ const ROLES = {
 const ROLE_CONFIG = {
   [ROLES.CEO]: {
     title: 'CEO Dashboard',
-    navItems: ['dashboard', 'projects', 'finances', 'equipment', 'ai-assistant', 'ai-visualizer']
+    navItems: ['dashboard', 'projects', 'ai-visualizer']
   },
   [ROLES.PROJECT_MANAGER]: {
     title: 'Project Manager Portal',
-    navItems: ['dashboard', 'projects', 'tasks', 'materials', 'equipment', 'ai-assistant', 'ai-visualizer']
+    navItems: ['dashboard', 'projects', 'tasks', 'materials', 'ai-visualizer']
   },
   [ROLES.ENGINEER]: {
     title: 'Engineer Workspace',
-    navItems: ['dashboard', 'projects', 'tasks', 'equipment', 'ai-assistant', 'ai-visualizer']
+    navItems: ['dashboard', 'projects', 'tasks', 'ai-visualizer']
   },
   [ROLES.SAFETY_MANAGER]: {
     title: 'Safety Management',
-    navItems: ['dashboard', 'safety', 'projects', 'equipment', 'ai-assistant', 'ai-visualizer']
+    navItems: ['dashboard', 'safety', 'projects', 'ai-visualizer']
   },
   [ROLES.FOREMAN]: {
     title: 'Foreman Portal',
-    navItems: ['dashboard', 'tasks', 'materials', 'equipment', 'ai-assistant', 'ai-visualizer']
+    navItems: ['dashboard', 'tasks', 'materials', 'ai-visualizer']
   }
 };
 
@@ -117,6 +115,27 @@ function LandingPage({ companyDomain }) {
 function RoleDashboard() {
   const { companyDomain, role } = useParams();
   const config = ROLE_CONFIG[role] || ROLE_CONFIG[ROLES.ENGINEER];
+  const [message, setMessage] = useState('');
+  const { user, updateUserRole } = useUserContext();
+  const { aiResponse, loading, sendMessage, clearAiResponse } = useWorkerAI();
+
+  // Update user role when route changes
+  useEffect(() => {
+    if (role) {
+      updateUserRole(role);
+    }
+  }, [role, updateUserRole]);
+
+  // Handle sending message to Worker AI
+  const handleSendMessage = async (e) => {
+    e.preventDefault();
+
+    if (!message.trim()) return;
+
+    // Send message and get response
+    await sendMessage(role, message, { source: 'bottom_bar' });
+    setMessage('');
+  };
 
   return (
     <>
@@ -146,15 +165,6 @@ function RoleDashboard() {
               {config.navItems.includes('safety') && (
                 <Nav.Link as={Link} to={`/${companyDomain}/${role}/safety`}>Safety Reports</Nav.Link>
               )}
-              {config.navItems.includes('finances') && (
-                <Nav.Link as={Link} to={`/${companyDomain}/${role}/finances`}>Finances</Nav.Link>
-              )}
-              {config.navItems.includes('equipment') && (
-                <Nav.Link as={Link} to={`/${companyDomain}/${role}/equipment`}>Equipment</Nav.Link>
-              )}
-              {config.navItems.includes('ai-assistant') && (
-                <Nav.Link as={Link} to={`/${companyDomain}/${role}/ai-assistant`}>AI Assistant</Nav.Link>
-              )}
               {config.navItems.includes('ai-visualizer') && (
                 <Nav.Link as={Link} to={`/${companyDomain}/${role}/ai-visualizer`}>AI Visualizer</Nav.Link>
               )}
@@ -170,26 +180,85 @@ function RoleDashboard() {
           <Route path="tasks" element={<TaskManager role={role} />} />
           <Route path="materials" element={<MaterialsTracking role={role} />} />
           <Route path="safety" element={<SafetyReports role={role} />} />
-          <Route path="finances" element={<Dashboard role={role} financeView={true} />} />
-          <Route path="equipment" element={<EquipmentManager role={role} />} />
-          <Route path="ai-assistant" element={<AIAssistant role={role} />} />
           <Route path="ai-visualizer" element={<AIVisualizer role={role} />} />
         </Routes>
       </Container>
 
+      {/* Integrated Worker AI Bottom Bar */}
       <div className="bottom-bar">
         <Container>
-          <div className="input-group">
+          {aiResponse && (
+            <div className="ai-response mb-2">
+              <div className="ai-message">
+                <strong>{role.toUpperCase()} AI:</strong> {aiResponse}
+                <button
+                  className="btn-close float-end"
+                  onClick={clearAiResponse}
+                  aria-label="Close"
+                ></button>
+              </div>
+            </div>
+          )}
+          <form onSubmit={handleSendMessage} className="input-group">
             <input
               type="text"
               className="form-control"
-              placeholder="Type your message or question here..."
+              placeholder={`Ask the ${role.replace('-', ' ').toUpperCase()} AI anything...`}
               aria-label="Message input"
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              disabled={loading}
             />
-            <Button variant="primary">Send</Button>
-          </div>
+            <Button
+              variant="primary"
+              type="submit"
+              disabled={loading || !message.trim()}
+            >
+              {loading ?
+                <>
+                  <Spinner animation="border" size="sm" className="me-1" role="status" aria-hidden="true" />
+                  Processing...
+                </> : 'Send'}
+            </Button>
+          </form>
         </Container>
       </div>
+
+      {/* Styles for AI integration */}
+      <style>{`
+        .bottom-bar {
+          position: fixed;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          background: #f8f9fa;
+          padding: 1rem;
+          box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+          z-index: 1000;
+        }
+        
+        .ai-response {
+          max-height: 200px;
+          overflow-y: auto;
+        }
+        
+        .ai-message {
+          background-color: #e3f2fd;
+          padding: 0.75rem;
+          border-radius: 0.5rem;
+          position: relative;
+        }
+        
+        .btn-close {
+          font-size: 0.75rem;
+          padding: 0.25rem;
+        }
+        
+        /* Add margin to main container to prevent content from being hidden behind bottom bar */
+        .container {
+          margin-bottom: 80px;
+        }
+      `}</style>
     </>
   );
 }

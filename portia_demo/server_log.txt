@@ -1,0 +1,22 @@
+2025-04-13 03:02:15,201 [INFO] Worker AI: Database initialized
+2025-04-13 03:02:15,201 [INFO] Worker AI: Worker AI for role ceo initialized
+2025-04-13 03:02:15,201 [INFO] Worker AI: Initialized Worker AI for role ceo
+2025-04-13 03:02:15,201 [INFO] Worker AI: Database initialized
+2025-04-13 03:02:15,201 [INFO] Worker AI: Worker AI for role project-manager initialized
+2025-04-13 03:02:15,201 [INFO] Worker AI: Initialized Worker AI for role project-manager
+2025-04-13 03:02:15,201 [INFO] Worker AI: Database initialized
+2025-04-13 03:02:15,201 [INFO] Worker AI: Worker AI for role safety-officer initialized
+2025-04-13 03:02:15,201 [INFO] Worker AI: Initialized Worker AI for role safety-officer
+2025-04-13 03:02:15,201 [INFO] Worker AI: Database initialized
+2025-04-13 03:02:15,201 [INFO] Worker AI: Worker AI for role equipment-manager initialized
+2025-04-13 03:02:15,201 [INFO] Worker AI: Initialized Worker AI for role equipment-manager
+2025-04-13 03:02:15,202 [INFO] Worker AI: Database initialized
+2025-04-13 03:02:15,202 [INFO] Worker AI: Worker AI for role worker initialized
+2025-04-13 03:02:15,202 [INFO] Worker AI: Initialized Worker AI for role worker
+Starting Flask server on port 5003
+Worker AI Manager initialized with 5 roles
+Portia available: True
+ * Serving Flask app 'app'
+ * Debug mode: on
+Address already in use
+Port 5003 is in use by another program. Either identify and stop that program, or start the server with a different port.
