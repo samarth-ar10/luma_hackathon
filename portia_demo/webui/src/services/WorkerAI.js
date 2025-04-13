@@ -13,6 +13,7 @@ class WorkerAI {
             visualization: false,
             autonomous: false
         };
+        this.apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5003';
     }
 
     /**
@@ -109,33 +110,89 @@ class WorkerAI {
     }
 
     /**
-     * Send a message to change visualization type
+     * Send a message to change visualization type using AI
      * @param {string} dataType - Type of data being visualized
      * @param {string} currentVisualization - Current visualization type
      * @param {Array} data - Data being visualized
+     * @param {string} userPrompt - User's request for visualization change
      * @returns {Promise<Object>} - Visualization recommendations
      */
-    async changeVisualization(dataType, currentVisualization, data) {
+    async changeVisualization(dataType, currentVisualization, data, userPrompt = '') {
         if (!this.initialized) {
             return { status: 'error', message: 'Worker AI not initialized' };
         }
 
         try {
-            // In a real implementation, we would call the backend API
-            // For now, simulate a response with visualization recommendations
+            // Use the actual API if there's a user prompt, otherwise use local recommendations
+            if (userPrompt) {
+                // Make an actual API call to the backend
+                const response = await fetch(`${this.apiUrl}/api/worker/message`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        user_id: 'visualization_user',  // Could be replaced with actual user ID
+                        role: this.activeRole,
+                        message: userPrompt,
+                        context: {
+                            current_visualization: currentVisualization,
+                            data_type: dataType,
+                            data_sample: data.slice(0, 5), // Send sample of data to keep payload small
+                            visualization_request: true
+                        }
+                    }),
+                });
 
-            const recommendations = this._getVisualizationRecommendations(dataType, data);
+                if (!response.ok) {
+                    throw new Error(`API error: ${response.status}`);
+                }
 
-            // Simulate a processing delay
-            await new Promise(resolve => setTimeout(resolve, 800));
+                const result = await response.json();
 
-            return {
-                status: 'success',
-                dataType,
-                recommended: recommendations.find(r => r.type !== currentVisualization) || recommendations[0],
-                options: recommendations,
-                implementation: this._generateImplementationCode(recommendations[0].type, dataType)
-            };
+                // Process the AI response
+                if (result.error) {
+                    return {
+                        status: 'error',
+                        message: result.message || 'Error processing visualization request'
+                    };
+                }
+
+                // Parse the visualization recommendations from the AI response
+                const visualizationData = this._extractVisualizationRecommendation(result.message, result.visualization);
+
+                // Combine with some default options if AI didn't provide enough
+                let options = visualizationData.options;
+                if (!options || options.length < 2) {
+                    const defaultOptions = this._getVisualizationRecommendations(dataType, data);
+                    options = [...(options || []), ...defaultOptions.filter(o =>
+                        !options || !options.some(rec => rec.type === o.type)
+                    )];
+                }
+
+                return {
+                    status: 'success',
+                    dataType,
+                    message: visualizationData.message || result.message,
+                    recommended: visualizationData.recommended || options[0],
+                    options: options,
+                    implementation: visualizationData.code || this._generateImplementationCode(
+                        visualizationData.recommended?.type || options[0].type,
+                        dataType
+                    )
+                };
+            } else {
+                // Use local recommendations if no user prompt provided
+                const recommendations = this._getVisualizationRecommendations(dataType, data);
+
+                return {
+                    status: 'success',
+                    dataType,
+                    recommended: recommendations.find(r => r.type !== currentVisualization) || recommendations[0],
+                    options: recommendations,
+                    implementation: this._generateImplementationCode(recommendations[0].type, dataType)
+                };
+            }
         } catch (error) {
             console.error('Error changing visualization:', error);
             return {
@@ -143,6 +200,85 @@ class WorkerAI {
                 message: error.message || 'Error getting visualization recommendations'
             };
         }
+    }
+
+    /**
+     * Extract visualization recommendations from AI response
+     * @param {string} message - The AI message response
+     * @param {string} visualizationCode - Code block extracted from the response
+     * @returns {Object} - Parsed visualization recommendations
+     * @private
+     */
+    _extractVisualizationRecommendation(message, visualizationCode) {
+        const result = {
+            message: message,
+            code: visualizationCode,
+            options: []
+        };
+
+        // Try to identify the recommended visualization types from the message
+        const vizTypes = ['bar', 'line', 'pie', 'area', 'scatter'];
+
+        // Extract visualization options and recommendations
+        vizTypes.forEach(type => {
+            // Look for phrases indicating recommendations for each chart type
+            const typeRegexes = [
+                // Direct recommendation
+                new RegExp(`\\b${type}\\s+(chart|graph|visualization)\\s+is\\s+(best|recommended|ideal|suitable)\\b`, 'i'),
+                // Phrase mentioning benefits
+                new RegExp(`\\b${type}\\s+(chart|graph|visualization)\\s+(would|could|can|will)\\s+(work|be good|be best|show)\\b`, 'i'),
+                // Any mention of the chart type
+                new RegExp(`\\b${type}\\s+(chart|graph|visualization)\\b`, 'i'),
+            ];
+
+            // Check all regex patterns
+            for (const regex of typeRegexes) {
+                if (regex.test(message)) {
+                    // Extract a reason if available (look for sentence containing the chart type)
+                    const sentenceRegex = new RegExp(`[^.!?]*\\b${type}\\s+(chart|graph|visualization)\\b[^.!?]*[.!?]`, 'i');
+                    const sentenceMatch = message.match(sentenceRegex);
+                    const reason = sentenceMatch ? sentenceMatch[0].trim() : `${type.charAt(0).toUpperCase() + type.slice(1)} chart recommended by AI`;
+
+                    result.options.push({
+                        type: type,
+                        reason: reason
+                    });
+
+                    // Use the first match as the recommended option
+                    if (!result.recommended) {
+                        result.recommended = {
+                            type: type,
+                            reason: reason
+                        };
+                    }
+
+                    break; // Once we've found a match with this type, move to the next type
+                }
+            }
+        });
+
+        // If we can extract a chart type from the code
+        if (visualizationCode) {
+            vizTypes.forEach(type => {
+                const chartClassRegex = new RegExp(`<\\s*${type.charAt(0).toUpperCase() + type.slice(1)}Chart`, 'i');
+                if (chartClassRegex.test(visualizationCode) && !result.options.some(opt => opt.type === type)) {
+                    result.options.push({
+                        type: type,
+                        reason: `${type.charAt(0).toUpperCase() + type.slice(1)} chart from implementation code`
+                    });
+
+                    // If no recommendation found in text, use the one from code
+                    if (!result.recommended) {
+                        result.recommended = {
+                            type: type,
+                            reason: `${type.charAt(0).toUpperCase() + type.slice(1)} chart from implementation code`
+                        };
+                    }
+                }
+            });
+        }
+
+        return result;
     }
 
     /**

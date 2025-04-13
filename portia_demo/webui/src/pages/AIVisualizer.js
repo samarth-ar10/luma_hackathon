@@ -103,7 +103,7 @@ function AIVisualizer({ role }) {
         }
     };
 
-    // Handle change visualization request
+    // Handle visualization request
     const handleVisualizationRequest = async () => {
         if (!userRequest) return;
 
@@ -115,7 +115,8 @@ function AIVisualizer({ role }) {
             const result = await workerAI.changeVisualization(
                 dataType,
                 visualizationType,
-                data
+                data,
+                userRequest // Pass the user's text prompt to the AI
             );
 
             if (result.status === 'error') {
@@ -144,8 +145,14 @@ function AIVisualizer({ role }) {
                 }
             }
 
-            setAIResponse(result);
+            // Store the complete AI response
+            setAIResponse({
+                ...result,
+                message: result.message
+            });
 
+            // Clear the user request input after processing
+            setUserRequest('');
         } catch (err) {
             console.error("Error processing visualization request:", err);
             setError("Error processing your request. Please try again.");
@@ -396,6 +403,13 @@ function AIVisualizer({ role }) {
                         <Card.Body>
                             {aiResponse ? (
                                 <div>
+                                    {aiResponse.message && (
+                                        <div className="mb-3">
+                                            <h6>AI Suggestion:</h6>
+                                            <p>{aiResponse.message}</p>
+                                        </div>
+                                    )}
+
                                     {aiResponse.recommended && (
                                         <div className="mb-3">
                                             <h6>Recommended Visualization:</h6>
